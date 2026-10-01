@@ -63,50 +63,70 @@ public enum Race {
             )),
 
     GOBLIN("goblin", "Goblin", Items.GOLD_NUGGET,
-            "Pequeno, veloz e sortudo. Vive de pilhagem: tem pouca vida, mas muita velocidade e sorte.",
+            "Pequeno, veloz e sortudo. Vive de pilhagem: pouca vida, mas muita velocidade e sorte. "
+                    + "Para a forma final, precisa derrotar um chefe.",
             List.of(
                     new Stage("Goblin", new Mission(MissionType.KILL_HOSTILE, 40), List.of(
-                            Bonuses.speedPct(15), Bonuses.maxHealth(-6), Bonuses.luck(1))),
-                    new Stage("Goblin Saqueador", new Mission(MissionType.KILL_HOSTILE, 140), List.of(
-                            Bonuses.speedPct(18), Bonuses.maxHealth(-4), Bonuses.luck(2), Bonuses.breakSpeedPct(10))),
+                            Bonuses.scalePct(-15), Bonuses.speedPct(15), Bonuses.maxHealth(-6), Bonuses.luck(1))),
+                    new Stage("Goblin Saqueador", new Mission(MissionType.KILL_BOSS, 1), List.of(
+                            Bonuses.scalePct(-15), Bonuses.speedPct(18), Bonuses.maxHealth(-4), Bonuses.luck(2),
+                            Bonuses.breakSpeedPct(10))),
                     new Stage("Rei Goblin", null, List.of(
-                            Bonuses.speedPct(20), Bonuses.maxHealth(-2), Bonuses.luck(3),
+                            Bonuses.scalePct(-15), Bonuses.speedPct(20), Bonuses.maxHealth(-2), Bonuses.luck(3),
                             Bonuses.breakSpeedPct(20), Bonuses.attackDamage(1)))
             )),
 
     DRACONATO("draconato", "Draconato", Items.DRAGON_HEAD,
-            "Descendente de dragões: couraça de escamas e golpes poderosos, mas movimentos pesados.",
+            "Descendente de dragões: couraça de escamas e golpes poderosos, mas movimentos pesados. "
+                    + "Para a forma final, precisa derrotar um chefe.",
             List.of(
                     new Stage("Draconato", new Mission(MissionType.KILL_HOSTILE, 50), List.of(
-                            Bonuses.attackDamage(1.5), Bonuses.armor(2), Bonuses.maxHealth(2), Bonuses.speedPct(-4))),
-                    new Stage("Draconato Escamado", new Mission(MissionType.KILL_HOSTILE, 160), List.of(
-                            Bonuses.attackDamage(2), Bonuses.armor(3), Bonuses.maxHealth(6), Bonuses.speedPct(-3))),
+                            Bonuses.scalePct(10), Bonuses.attackDamage(1.5), Bonuses.armor(2),
+                            Bonuses.maxHealth(2), Bonuses.speedPct(-4))),
+                    new Stage("Draconato Escamado", new Mission(MissionType.KILL_BOSS, 1), List.of(
+                            Bonuses.scalePct(10), Bonuses.attackDamage(2), Bonuses.armor(3),
+                            Bonuses.maxHealth(6), Bonuses.speedPct(-3))),
                     new Stage("Dragão Ancião", null, List.of(
-                            Bonuses.attackDamage(3), Bonuses.armor(5), Bonuses.toughness(2),
+                            Bonuses.scalePct(10), Bonuses.attackDamage(3), Bonuses.armor(5), Bonuses.toughness(2),
                             Bonuses.maxHealth(10), Bonuses.knockbackResistPct(20)))
             )),
 
-    LICANTROPO("licantropo", "Licantropo", Items.BONE,
-            "Caçador selvagem. Rápido e feroz, evolui caçando animais, mas é menos resistente.",
+    HALFLING("halfling", "Halfling", Items.WHEAT,
+            "Pequeno, sortudo e ligado à terra. Ágil e de sorte alta, mas frágil. Evolui colhendo plantações.",
             List.of(
-                    new Stage("Licantropo", new Mission(MissionType.KILL_ANIMAL, 40), List.of(
-                            Bonuses.speedPct(12), Bonuses.attackDamage(1), Bonuses.maxHealth(-2))),
-                    new Stage("Lobo Caçador", new Mission(MissionType.KILL_ANIMAL, 120), List.of(
-                            Bonuses.speedPct(15), Bonuses.attackDamage(2), Bonuses.maxHealth(2))),
-                    new Stage("Lobo Alfa", null, List.of(
-                            Bonuses.speedPct(18), Bonuses.attackDamage(3), Bonuses.maxHealth(6),
-                            Bonuses.knockbackResistPct(10)))
+                    new Stage("Halfling", new Mission(MissionType.HARVEST_CROP, 60), List.of(
+                            Bonuses.scalePct(-25), Bonuses.speedPct(8), Bonuses.luck(1), Bonuses.maxHealth(-4))),
+                    new Stage("Halfling Andarilho", new Mission(MissionType.HARVEST_CROP, 200), List.of(
+                            Bonuses.scalePct(-25), Bonuses.speedPct(10), Bonuses.luck(2), Bonuses.maxHealth(-2))),
+                    new Stage("Herói do Condado", null, List.of(
+                            Bonuses.scalePct(-25), Bonuses.speedPct(12), Bonuses.luck(3), Bonuses.maxHealth(2)))
             )),
 
-    VAMPIRO("vampiro", "Vampiro", Items.REDSTONE,
-            "Predador noturno, rápido e letal, mas de corpo frágil. Evolui abatendo monstros.",
+    MINOTAURO("minotauro", "Minotauro", Items.GOLDEN_AXE,
+            "Gigante de força bruta, difícil de empurrar. Evolui no corpo a corpo e, para a forma final, "
+                    + "precisa derrotar um chefe.",
             List.of(
-                    new Stage("Vampiro", new Mission(MissionType.KILL_HOSTILE, 40), List.of(
-                            Bonuses.attackDamage(1), Bonuses.speedPct(8), Bonuses.maxHealth(-6))),
-                    new Stage("Vampiro Antigo", new Mission(MissionType.KILL_HOSTILE, 150), List.of(
-                            Bonuses.attackDamage(2), Bonuses.speedPct(10), Bonuses.maxHealth(-2))),
-                    new Stage("Senhor da Noite", null, List.of(
-                            Bonuses.attackDamage(3), Bonuses.speedPct(12), Bonuses.maxHealth(4), Bonuses.luck(1)))
+                    new Stage("Minotauro", new Mission(MissionType.KILL_MELEE, 40), List.of(
+                            Bonuses.scalePct(15), Bonuses.attackDamage(2), Bonuses.maxHealth(6),
+                            Bonuses.knockbackResistPct(20), Bonuses.speedPct(-3))),
+                    new Stage("Minotauro Bravo", new Mission(MissionType.KILL_BOSS, 1), List.of(
+                            Bonuses.scalePct(15), Bonuses.attackDamage(3), Bonuses.maxHealth(10),
+                            Bonuses.knockbackResistPct(30), Bonuses.speedPct(-2))),
+                    new Stage("Rei do Labirinto", null, List.of(
+                            Bonuses.scalePct(15), Bonuses.attackDamage(4), Bonuses.maxHealth(14),
+                            Bonuses.knockbackResistPct(40), Bonuses.armor(2)))
+            )),
+
+    TRITAO("tritao", "Tritão", Items.TRIDENT,
+            "Povo do mar. Respira por mais tempo e nada muito bem, mas é menos resistente em terra. "
+                    + "Evolui abatendo monstros à distância (tridente, arco).",
+            List.of(
+                    new Stage("Tritão", new Mission(MissionType.KILL_RANGED, 30), List.of(
+                            Bonuses.oxygen(3), Bonuses.waterEffPct(50), Bonuses.maxHealth(-2), Bonuses.speedPct(-5))),
+                    new Stage("Tritão das Marés", new Mission(MissionType.KILL_RANGED, 110), List.of(
+                            Bonuses.oxygen(5), Bonuses.waterEffPct(75), Bonuses.luck(1), Bonuses.speedPct(-3))),
+                    new Stage("Senhor dos Mares", null, List.of(
+                            Bonuses.oxygen(8), Bonuses.waterEffPct(100), Bonuses.luck(2), Bonuses.attackDamage(1)))
             ));
 
     private final String id;
@@ -180,7 +200,8 @@ public enum Race {
         KILL_HOSTILE("abater monstros"),
         KILL_RANGED("abater monstros à distância (arco, besta, tridente...)"),
         KILL_MELEE("abater monstros no corpo a corpo"),
-        KILL_ANIMAL("caçar animais"),
+        KILL_BOSS("derrotar um chefe (Rei Goblin ou Campeão Sombrio)"),
+        HARVEST_CROP("colher plantações maduras"),
         MINE_ORE("minerar minérios");
 
         private final String description;
@@ -265,6 +286,21 @@ public enum Race {
         static Bonus knockbackResistPct(int pct) {
             return new Bonus("knockback_resist", Attributes.KNOCKBACK_RESISTANCE, pct / 100.0,
                     AttributeModifier.Operation.ADD_VALUE, sign(pct) + pct + "% de resistência a empurrão");
+        }
+
+        static Bonus scalePct(int pct) {
+            return new Bonus("scale", Attributes.SCALE, pct / 100.0,
+                    AttributeModifier.Operation.ADD_MULTIPLIED_BASE, sign(pct) + pct + "% de tamanho");
+        }
+
+        static Bonus oxygen(double v) {
+            return new Bonus("oxygen", Attributes.OXYGEN_BONUS, v,
+                    AttributeModifier.Operation.ADD_VALUE, sign(v) + num(v) + " de fôlego debaixo d'água");
+        }
+
+        static Bonus waterEffPct(int pct) {
+            return new Bonus("water_eff", Attributes.WATER_MOVEMENT_EFFICIENCY, pct / 100.0,
+                    AttributeModifier.Operation.ADD_VALUE, sign(pct) + pct + "% de eficiência ao nadar");
         }
     }
 }

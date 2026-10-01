@@ -1,13 +1,16 @@
 package com.racasrpg.race;
 
 import com.racasrpg.RacasRpg;
+import com.racasrpg.entity.IRaceBoss;
 import com.racasrpg.net.ModNetwork;
+import com.racasrpg.quest.QuestManager;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.Tags;
@@ -56,6 +59,12 @@ public class RaceEvents {
             return;
         }
 
+        QuestManager.onKill(player, event.getEntity());
+
+        if (event.getEntity() instanceof IRaceBoss) {
+            RaceManager.addProgress(player, Race.MissionType.KILL_BOSS);
+        }
+
         if (event.getEntity() instanceof Enemy) {
             RaceManager.addProgress(player, Race.MissionType.KILL_HOSTILE);
 
@@ -65,15 +74,20 @@ public class RaceEvents {
             } else if (direct == player) {
                 RaceManager.addProgress(player, Race.MissionType.KILL_MELEE);
             }
-        } else if (event.getEntity() instanceof Animal) {
-            RaceManager.addProgress(player, Race.MissionType.KILL_ANIMAL);
         }
     }
 
     @SubscribeEvent
     public static void onBreak(BlockEvent.BreakEvent event) {
-        if (event.getPlayer() instanceof ServerPlayer player && event.getState().is(Tags.Blocks.ORES)) {
+        if (!(event.getPlayer() instanceof ServerPlayer player)) {
+            return;
+        }
+        BlockState state = event.getState();
+        if (state.is(Tags.Blocks.ORES)) {
             RaceManager.addProgress(player, Race.MissionType.MINE_ORE);
+        }
+        if (state.getBlock() instanceof CropBlock crop && crop.isMaxAge(state)) {
+            RaceManager.addProgress(player, Race.MissionType.HARVEST_CROP);
         }
     }
 }
