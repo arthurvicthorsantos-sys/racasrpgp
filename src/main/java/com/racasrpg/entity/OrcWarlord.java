@@ -38,7 +38,7 @@ public class OrcWarlord extends Vindicator implements IRaceBoss {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Vindicator.createAttributes()
-                .add(Attributes.MAX_HEALTH, 280.0)
+                .add(Attributes.MAX_HEALTH, 1000.0)
                 .add(Attributes.ATTACK_DAMAGE, 12.0)
                 .add(Attributes.ARMOR, 6.0)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.5)

@@ -40,7 +40,7 @@ public class ShadowChampion extends WitherSkeleton implements IRaceBoss {
 
     public static AttributeSupplier.Builder createAttributes() {
         return AbstractSkeleton.createAttributes()
-                .add(Attributes.MAX_HEALTH, 300.0)
+                .add(Attributes.MAX_HEALTH, 1000.0)
                 .add(Attributes.MOVEMENT_SPEED, 0.3)
                 .add(Attributes.ATTACK_DAMAGE, 10.0)
                 .add(Attributes.ARMOR, 8.0)

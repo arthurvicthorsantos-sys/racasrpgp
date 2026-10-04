@@ -30,7 +30,7 @@ public class GnomeAutomaton extends IronGolem implements IRaceBoss {
 
     public static AttributeSupplier.Builder createAttributes() {
         return IronGolem.createAttributes()
-                .add(Attributes.MAX_HEALTH, 300.0)
+                .add(Attributes.MAX_HEALTH, 1000.0)
                 .add(Attributes.ATTACK_DAMAGE, 12.0)
                 .add(Attributes.ARMOR, 8.0)
                 .add(Attributes.FOLLOW_RANGE, 40.0)

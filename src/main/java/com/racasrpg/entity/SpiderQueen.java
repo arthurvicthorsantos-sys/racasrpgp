@@ -39,7 +39,7 @@ public class SpiderQueen extends Spider implements IRaceBoss {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Spider.createAttributes()
-                .add(Attributes.MAX_HEALTH, 240.0)
+                .add(Attributes.MAX_HEALTH, 1000.0)
                 .add(Attributes.ATTACK_DAMAGE, 8.0)
                 .add(Attributes.ARMOR, 4.0)
                 .add(Attributes.FOLLOW_RANGE, 40.0)

@@ -36,7 +36,7 @@ public class StoneColossus extends IronGolem implements IRaceBoss {
 
     public static AttributeSupplier.Builder createAttributes() {
         return IronGolem.createAttributes()
-                .add(Attributes.MAX_HEALTH, 320.0)
+                .add(Attributes.MAX_HEALTH, 1000.0)
                 .add(Attributes.ATTACK_DAMAGE, 14.0)
                 .add(Attributes.ARMOR, 10.0)
                 .add(Attributes.FOLLOW_RANGE, 40.0)

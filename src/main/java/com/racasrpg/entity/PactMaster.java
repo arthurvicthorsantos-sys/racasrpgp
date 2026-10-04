@@ -28,7 +28,7 @@ public class PactMaster extends Evoker implements IRaceBoss {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Evoker.createAttributes()
-                .add(Attributes.MAX_HEALTH, 260.0)
+                .add(Attributes.MAX_HEALTH, 1000.0)
                 .add(Attributes.ARMOR, 4.0)
                 .add(Attributes.FOLLOW_RANGE, 40.0)
                 .add(Attributes.SCALE, 1.8);

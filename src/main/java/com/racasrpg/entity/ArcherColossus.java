@@ -28,7 +28,7 @@ public class ArcherColossus extends Pillager implements IRaceBoss {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Pillager.createAttributes()
-                .add(Attributes.MAX_HEALTH, 260.0)
+                .add(Attributes.MAX_HEALTH, 1000.0)
                 .add(Attributes.ATTACK_DAMAGE, 8.0)
                 .add(Attributes.ARMOR, 4.0)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.5)

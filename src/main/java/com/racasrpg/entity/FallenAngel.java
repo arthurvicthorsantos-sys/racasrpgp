@@ -28,7 +28,7 @@ public class FallenAngel extends Vex implements IRaceBoss {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Vex.createAttributes()
-                .add(Attributes.MAX_HEALTH, 240.0)
+                .add(Attributes.MAX_HEALTH, 1000.0)
                 .add(Attributes.ATTACK_DAMAGE, 10.0)
                 .add(Attributes.ARMOR, 6.0)
                 .add(Attributes.FOLLOW_RANGE, 40.0)

@@ -11,6 +11,12 @@ import net.minecraft.world.entity.player.Player;
 
 /** Parte comum dos chefes: barra de vida, música de luta e fúria com metade da vida. */
 public final class BossCore {
+    /**
+     * O Minecraft limita a vida máxima a 1024. Para os chefes terem "10 mil de vida", eles têm 1000 de vida
+     * e recebem só 1/HEALTH_SCALE do dano (10 x 1000 = 10.000 de vida efetiva). Mude este número para ajustar.
+     */
+    public static final float HEALTH_SCALE = 10.0F;
+
     private final ServerBossEvent event;
     private final BossMusic music;
     private boolean enraged = false;

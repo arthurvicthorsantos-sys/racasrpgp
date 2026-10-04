@@ -35,7 +35,7 @@ public class FlameWyrm extends Blaze implements IRaceBoss {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Blaze.createAttributes()
-                .add(Attributes.MAX_HEALTH, 240.0)
+                .add(Attributes.MAX_HEALTH, 1000.0)
                 .add(Attributes.ATTACK_DAMAGE, 8.0)
                 .add(Attributes.ARMOR, 4.0)
                 .add(Attributes.FOLLOW_RANGE, 48.0)
