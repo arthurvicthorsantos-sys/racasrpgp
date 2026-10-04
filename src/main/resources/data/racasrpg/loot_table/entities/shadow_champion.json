@@ -44,6 +44,25 @@
       "entries": [
         {
           "type": "minecraft:item",
+          "name": "racasrpg:boss_essence",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 3,
+                "max": 5
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
           "name": "minecraft:emerald",
           "functions": [
             {
