@@ -188,3 +188,9 @@ idea {
         downloadJavadoc = true
     }
 }
+
+
+// Mostra todos os erros de compilacao de uma vez (em vez de parar nos primeiros)
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs.addAll(['-XDshould-stop.ifError=FLOW', '-Xmaxerrs', '1000'])
+}

@@ -26,7 +26,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.entity.living.LivingFallEvent;
-import net.neoforged.neoforge.event.entity.living.LivingJumpEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 /** Movimentação única de cada raça. Tudo roda no servidor. */
@@ -248,7 +248,7 @@ public class MovementEvents {
     }
 
     @SubscribeEvent
-    public static void onJump(LivingJumpEvent event) {
+    public static void onJump(LivingEvent.LivingJumpEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) {
             return;
         }
