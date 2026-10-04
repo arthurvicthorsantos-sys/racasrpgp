@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "racasrpg:cripta_lich",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 46,
+    "separation": 18,
+    "salt": 91182
+  }
+}
