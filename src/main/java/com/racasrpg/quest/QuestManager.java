@@ -4,6 +4,7 @@ import java.util.function.Supplier;
 
 import com.racasrpg.entity.ModEntities;
 import com.racasrpg.net.ModNetwork;
+import com.racasrpg.race.HonorManager;
 import com.racasrpg.race.ModAttachments;
 import com.racasrpg.race.QuestData;
 import com.racasrpg.race.Race;
@@ -115,6 +116,7 @@ public final class QuestManager {
                 player.drop(reward, false);
             }
             set(player, new QuestData(data.index() + 1, 0));
+            HonorManager.add(player, 15);
             player.level().playSound(null, player.blockPosition(), SoundEvents.PLAYER_LEVELUP,
                     SoundSource.PLAYERS, 1.0F, 1.0F);
             say(player, who + ": Bom trabalho! Sua recompensa: " + rewardName + ".", ChatFormatting.GOLD);

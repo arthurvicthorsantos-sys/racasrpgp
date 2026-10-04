@@ -1,11 +1,16 @@
 package com.racasrpg.race;
 
 import com.racasrpg.RacasRpg;
+import com.racasrpg.entity.BossInfo;
 import com.racasrpg.entity.IRaceBoss;
+import com.racasrpg.item.SetBonuses;
 import com.racasrpg.net.ModNetwork;
 import com.racasrpg.quest.QuestManager;
 
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -43,13 +48,17 @@ public class RaceEvents {
         }
     }
 
-    /** Abre o menu de escolha de raça ~3 segundos depois de entrar no mundo, se o jogador ainda não tem raça. */
+    /** Abre o menu ~3 segundos depois de entrar no mundo, se o jogador ainda não escolheu raça ou classe. */
     @SubscribeEvent
     public static void onPlayerTick(PlayerTickEvent.Post event) {
-        if (event.getEntity() instanceof ServerPlayer player
-                && player.tickCount == 60
-                && !RaceManager.get(player).hasRace()) {
+        if (!(event.getEntity() instanceof ServerPlayer player)) {
+            return;
+        }
+        if (player.tickCount == 60 && (!RaceManager.get(player).hasRace() || !RaceManager.get(player).hasClass())) {
             ModNetwork.openMenu(player);
+        }
+        if (player.tickCount % 40 == 0) {
+            SetBonuses.tick(player);
         }
     }
 
@@ -61,12 +70,18 @@ public class RaceEvents {
 
         QuestManager.onKill(player, event.getEntity());
 
-        if (event.getEntity() instanceof IRaceBoss) {
+        if (event.getEntity() instanceof IRaceBoss boss) {
             RaceManager.addProgress(player, Race.MissionType.KILL_BOSS);
+            BossInfo mine = BossInfo.forRace(RaceManager.get(player).race());
+            if (mine != null && mine.id().equals(boss.bossId())) {
+                RaceManager.addProgress(player, Race.MissionType.KILL_RACE_BOSS);
+            }
+            HonorManager.add(player, 40);
         }
 
         if (event.getEntity() instanceof Enemy) {
             RaceManager.addProgress(player, Race.MissionType.KILL_HOSTILE);
+            HonorManager.add(player, 1);
 
             Entity direct = event.getSource().getDirectEntity();
             if (direct instanceof Projectile) {
@@ -89,5 +104,18 @@ public class RaceEvents {
         if (state.getBlock() instanceof CropBlock crop && crop.isMaxAge(state)) {
             RaceManager.addProgress(player, Race.MissionType.HARVEST_CROP);
         }
+    }
+
+    /** Mostra a patente antes do nome do jogador no chat. */
+    @SubscribeEvent
+    public static void onNameFormat(PlayerEvent.NameFormat event) {
+        Player player = event.getEntity();
+        Race race = Race.byId(player.getData(ModAttachments.RACE_DATA).race());
+        if (race == null) {
+            return;
+        }
+        String title = Ranks.title(race, Ranks.rankIndex(HonorManager.get(player)));
+        event.setDisplayname(Component.literal("[" + title + "] ").withStyle(ChatFormatting.GOLD)
+                .append(event.getDisplayname()));
     }
 }

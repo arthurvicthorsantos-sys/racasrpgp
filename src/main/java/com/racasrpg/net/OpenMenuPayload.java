@@ -9,7 +9,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 
 /** Servidor -> cliente: abre o menu de raça com o estado atual do jogador. race vazio = escolher raça. */
-public record OpenMenuPayload(String race, int stage, int progress) implements CustomPacketPayload {
+public record OpenMenuPayload(String race, int stage, int progress, String clazz, int honor) implements CustomPacketPayload {
     public static final CustomPacketPayload.Type<OpenMenuPayload> TYPE = new CustomPacketPayload.Type<>(
             ResourceLocation.fromNamespaceAndPath(RacasRpg.MODID, "open_menu"));
 
@@ -17,6 +17,8 @@ public record OpenMenuPayload(String race, int stage, int progress) implements C
             ByteBufCodecs.STRING_UTF8, OpenMenuPayload::race,
             ByteBufCodecs.VAR_INT, OpenMenuPayload::stage,
             ByteBufCodecs.VAR_INT, OpenMenuPayload::progress,
+            ByteBufCodecs.STRING_UTF8, OpenMenuPayload::clazz,
+            ByteBufCodecs.VAR_INT, OpenMenuPayload::honor,
             OpenMenuPayload::new);
 
     @Override

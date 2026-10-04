@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.racasrpg.RacasRpg;
+import com.racasrpg.classes.ClassDef;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
@@ -46,11 +47,25 @@ public final class RaceManager {
         if (get(player).hasRace()) {
             return false;
         }
-        set(player, new RaceData(race.id(), 0, 0));
+        set(player, new RaceData(race.id(), 0, 0, ""));
         applyEffects(player);
         player.level().playSound(null, player.blockPosition(), SoundEvents.PLAYER_LEVELUP,
                 SoundSource.PLAYERS, 1.0F, 1.0F);
         player.sendSystemMessage(msg("Você agora é um " + race.displayName() + "!", ChatFormatting.GOLD));
+        return true;
+    }
+
+    /** Escolhe a classe (só quando já tem raça e ainda não tem classe). */
+    public static boolean chooseClass(ServerPlayer player, ClassDef clazz) {
+        RaceData data = get(player);
+        if (!data.hasRace() || data.hasClass()) {
+            return false;
+        }
+        set(player, new RaceData(data.race(), data.stage(), data.progress(), clazz.id()));
+        applyEffects(player);
+        player.level().playSound(null, player.blockPosition(), SoundEvents.PLAYER_LEVELUP,
+                SoundSource.PLAYERS, 1.0F, 1.2F);
+        player.sendSystemMessage(msg("Você agora é da classe " + clazz.displayName() + "!", ChatFormatting.GOLD));
         return true;
     }
 
@@ -69,18 +84,26 @@ public final class RaceManager {
             return;
         }
         if (data.progress() < mission.target()) {
-            player.sendSystemMessage(msg("Missão incompleta: " + mission.type().description()
+            player.sendSystemMessage(msg("Missão incompleta: " + race.describe(mission)
                     + " - " + data.progress() + "/" + mission.target(), ChatFormatting.RED));
             return;
         }
 
         int next = data.stage() + 1;
-        set(player, new RaceData(race.id(), next, 0));
+        int honor = HonorManager.get(player);
+        if (Ranks.rankIndex(honor) < next) {
+            player.sendSystemMessage(msg("Patente insuficiente: para evoluir você precisa ser "
+                    + Ranks.title(race, next) + " (honra " + Ranks.THRESHOLDS[next] + "). Sua honra: " + honor + ".",
+                    ChatFormatting.RED));
+            return;
+        }
+        set(player, new RaceData(race.id(), next, 0, data.clazz()));
         applyEffects(player);
         player.setHealth(player.getMaxHealth());
         player.level().playSound(null, player.blockPosition(), SoundEvents.PLAYER_LEVELUP,
                 SoundSource.PLAYERS, 1.0F, 0.8F);
         player.sendSystemMessage(msg("Você evoluiu para " + race.stage(next).name() + "!", ChatFormatting.GOLD));
+        HonorManager.add(player, 30);
     }
 
     /** Remove a raça do jogador (uso administrativo / testes). */
@@ -104,7 +127,7 @@ public final class RaceManager {
         if (data.progress() >= mission.target()) return;
 
         int progress = data.progress() + 1;
-        set(player, new RaceData(data.race(), data.stage(), progress));
+        set(player, new RaceData(data.race(), data.stage(), progress, data.clazz()));
 
         player.displayClientMessage(msg("Missão: " + progress + "/" + mission.target()
                 + " - " + type.description(), ChatFormatting.GREEN), true);
@@ -126,6 +149,8 @@ public final class RaceManager {
             AttributeInstance instance = player.getAttribute(entry.getValue());
             if (instance != null) {
                 instance.removeModifier(modifierId(entry.getKey()));
+                instance.removeModifier(modifierId("classe/" + entry.getKey()));
+                instance.removeModifier(modifierId("rank/" + entry.getKey()));
             }
         }
 
@@ -137,6 +162,26 @@ public final class RaceManager {
                 if (instance != null) {
                     instance.addOrReplacePermanentModifier(new AttributeModifier(
                             modifierId(bonus.key()), bonus.amount(), bonus.operation()));
+                }
+            }
+        }
+        int rank = Ranks.rankIndex(HonorManager.get(player));
+        if (race != null && rank > 0) {
+            for (Race.Bonus bonus : java.util.List.of(Race.Bonuses.maxHealth(2.0 * rank), Race.Bonuses.attackDamage(0.5 * rank))) {
+                AttributeInstance instance = player.getAttribute(bonus.attribute());
+                if (instance != null) {
+                    instance.addOrReplacePermanentModifier(new AttributeModifier(
+                            modifierId("rank/" + bonus.key()), bonus.amount(), bonus.operation()));
+                }
+            }
+        }
+        ClassDef clazz = ClassDef.byId(data.clazz());
+        if (clazz != null) {
+            for (Race.Bonus bonus : clazz.bonuses()) {
+                AttributeInstance instance = player.getAttribute(bonus.attribute());
+                if (instance != null) {
+                    instance.addOrReplacePermanentModifier(new AttributeModifier(
+                            modifierId("classe/" + bonus.key()), bonus.amount(), bonus.operation()));
                 }
             }
         }
@@ -156,6 +201,11 @@ public final class RaceManager {
                 }
             }
         }
+        for (ClassDef clazz : ClassDef.values()) {
+            for (Race.Bonus bonus : clazz.bonuses()) {
+                map.put(bonus.key(), bonus.attribute());
+            }
+        }
         return map;
     }
 
@@ -172,7 +222,9 @@ public final class RaceManager {
             return;
         }
         Race.Stage stage = race.stage(data.stage());
-        player.sendSystemMessage(msg("Raça: " + race.displayName() + " (" + stage.name() + ")", ChatFormatting.GOLD));
+        int honor = HonorManager.get(player);
+        player.sendSystemMessage(msg("Raça: " + race.displayName() + " (" + stage.name() + ") - Patente: "
+                + Ranks.title(race, Ranks.rankIndex(honor)) + " (honra " + honor + ")", ChatFormatting.GOLD));
         for (Race.Bonus bonus : stage.bonuses()) {
             ChatFormatting color = bonus.amount() >= 0 ? ChatFormatting.GREEN : ChatFormatting.RED;
             player.sendSystemMessage(msg("  " + bonus.text(), color));
@@ -181,7 +233,7 @@ public final class RaceManager {
         if (mission == null) {
             player.sendSystemMessage(msg("Forma máxima alcançada.", ChatFormatting.YELLOW));
         } else {
-            player.sendSystemMessage(msg("Missão: " + mission.type().description() + " - "
+            player.sendSystemMessage(msg("Missão: " + race.describe(mission) + " - "
                     + data.progress() + "/" + mission.target(), ChatFormatting.YELLOW));
         }
     }
@@ -203,7 +255,7 @@ public final class RaceManager {
                 }
                 player.sendSystemMessage(msg(line.toString(), ChatFormatting.WHITE));
                 if (stage.mission() != null) {
-                    player.sendSystemMessage(msg("     para evoluir: " + stage.mission().text(), ChatFormatting.GRAY));
+                    player.sendSystemMessage(msg("     para evoluir: " + race.describeFull(stage.mission()), ChatFormatting.GRAY));
                 }
             }
         }

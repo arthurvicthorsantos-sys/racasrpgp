@@ -1,5 +1,6 @@
 package com.racasrpg.race;
 
+import com.mojang.serialization.Codec;
 import com.racasrpg.RacasRpg;
 
 import net.neoforged.neoforge.attachment.AttachmentType;
@@ -22,6 +23,13 @@ public class ModAttachments {
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<QuestData>> QUEST_DATA =
             ATTACHMENT_TYPES.register("quest_data", () -> AttachmentType.builder(() -> QuestData.EMPTY)
                     .serialize(QuestData.CODEC)
+                    .copyOnDeath()
+                    .build());
+
+    /** Honra acumulada (define a patente na hierarquia da raça). */
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<Integer>> HONOR =
+            ATTACHMENT_TYPES.register("honor", () -> AttachmentType.builder(() -> 0)
+                    .serialize(Codec.INT)
                     .copyOnDeath()
                     .build());
 }

@@ -11,7 +11,7 @@ public final class ClientHooks {
     }
 
     public static void openMenu(OpenMenuPayload payload) {
-        RaceData data = new RaceData(payload.race(), payload.stage(), payload.progress());
-        Minecraft.getInstance().setScreen(new RaceScreen(data));
+        RaceData data = new RaceData(payload.race(), payload.stage(), payload.progress(), payload.clazz());
+        Minecraft.getInstance().setScreen(new RaceScreen(data, payload.honor()));
     }
 }
