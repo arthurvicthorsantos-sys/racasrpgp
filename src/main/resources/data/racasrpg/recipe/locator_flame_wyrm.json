@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "ABA",
+    "BCB",
+    "ADA"
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "B": {
+      "item": "minecraft:blaze_rod"
+    },
+    "C": {
+      "item": "minecraft:compass"
+    },
+    "D": {
+      "item": "minecraft:nether_star"
+    }
+  },
+  "result": {
+    "id": "racasrpg:locator_flame_wyrm",
+    "count": 1
+  }
+}

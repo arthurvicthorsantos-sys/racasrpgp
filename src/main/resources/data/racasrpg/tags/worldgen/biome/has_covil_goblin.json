@@ -1,11 +1,7 @@
 {
   "values": [
-    "#minecraft:is_forest",
-    "#minecraft:is_taiga",
-    "#minecraft:is_savanna",
-    "#minecraft:is_badlands",
-    "#minecraft:is_hill",
-    "minecraft:plains",
-    "minecraft:swamp"
+    "minecraft:swamp",
+    "minecraft:mangrove_swamp",
+    "#minecraft:is_forest"
   ]
 }

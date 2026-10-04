@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "ABA",
+    "BCB",
+    "ADA"
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:diamond_block"
+    },
+    "B": {
+      "item": "minecraft:iron_block"
+    },
+    "C": {
+      "item": "minecraft:compass"
+    },
+    "D": {
+      "item": "minecraft:heart_of_the_sea"
+    }
+  },
+  "result": {
+    "id": "racasrpg:locator_stone_colossus",
+    "count": 1
+  }
+}

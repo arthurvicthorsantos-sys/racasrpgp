@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "ABA",
+    "BCB",
+    "ADA"
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:diamond_block"
+    },
+    "B": {
+      "item": "minecraft:netherite_scrap"
+    },
+    "C": {
+      "item": "minecraft:compass"
+    },
+    "D": {
+      "item": "minecraft:echo_shard"
+    }
+  },
+  "result": {
+    "id": "racasrpg:locator_orc_warlord",
+    "count": 1
+  }
+}
