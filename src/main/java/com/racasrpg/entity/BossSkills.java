@@ -2,6 +2,8 @@ package com.racasrpg.entity;
 
 import java.util.List;
 
+import com.racasrpg.ability.Fx;
+
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
@@ -38,6 +40,12 @@ public final class BossSkills {
         }
     }
 
+    private static void ring(Mob boss, ParticleOptions type, int points, double speed) {
+        if (boss.level() instanceof ServerLevel level) {
+            Fx.ring(level, type, boss.getX(), boss.getY() + 0.3, boss.getZ(), points, speed);
+        }
+    }
+
     private static void sound(Mob boss, SoundEvent event, float volume, float pitch) {
         boss.level().playSound(null, boss.blockPosition(), event, SoundSource.HOSTILE, volume, pitch);
     }
@@ -52,6 +60,8 @@ public final class BossSkills {
         sound(boss, SoundEvents.DRAGON_FIREBALL_EXPLODE, 1.5F, 0.7F);
         burst(boss, ParticleTypes.EXPLOSION, 8, radius * 0.4);
         burst(boss, ParticleTypes.CLOUD, 40, radius * 0.5);
+        ring(boss, ParticleTypes.CLOUD, 44, radius * 0.1);
+        ring(boss, ParticleTypes.CRIT, 36, radius * 0.14);
     }
 
     /** Pulo na direção do alvo. */
@@ -72,6 +82,7 @@ public final class BossSkills {
         boss.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, seconds * 20, 1));
         sound(boss, SoundEvents.ENDER_DRAGON_GROWL, 1.5F, 0.9F);
         burst(boss, ParticleTypes.ANGRY_VILLAGER, 20, radius * 0.3);
+        ring(boss, ParticleTypes.POOF, 40, radius * 0.08);
     }
 
     /** Chuva sombria: dano e efeito de definhar em jogadores ao redor. */
@@ -82,6 +93,7 @@ public final class BossSkills {
         }
         sound(boss, SoundEvents.WITHER_SHOOT, 1.2F, 0.8F);
         burst(boss, ParticleTypes.SOUL, 60, radius * 0.4);
+        ring(boss, ParticleTypes.SOUL, 44, radius * 0.1);
     }
 
     /** Anel de fogo: dano e fogo em jogadores ao redor. */
@@ -93,6 +105,8 @@ public final class BossSkills {
         sound(boss, SoundEvents.BLAZE_SHOOT, 1.5F, 0.6F);
         burst(boss, ParticleTypes.FLAME, 80, radius * 0.4);
         burst(boss, ParticleTypes.LAVA, 20, radius * 0.3);
+        ring(boss, ParticleTypes.FLAME, 56, radius * 0.12);
+        ring(boss, ParticleTypes.SMOKE, 40, radius * 0.07);
     }
 
     /** Teletransporta o chefe para as costas do alvo. */
@@ -181,5 +195,16 @@ public final class BossSkills {
         for (int i = 0; i < count && nearby + i < maxNearby; i++) {
             type.spawn(level, boss.blockPosition().offset(i * 2 - 1, 0, 2), MobSpawnType.MOB_SUMMONED);
         }
+    }
+
+    /** Bola de fogo do chefe na direção do alvo (fere jogadores, não destrói blocos). */
+    public static void fireball(Mob boss, LivingEntity target, float damage, double radius) {
+        if (!(boss.level() instanceof ServerLevel level)) {
+            return;
+        }
+        Vec3 start = new Vec3(boss.getX(), boss.getEyeY(), boss.getZ());
+        Vec3 dir = new Vec3(target.getX() - start.x, target.getEyeY() - start.y, target.getZ() - start.z).normalize();
+        com.racasrpg.ability.ProjectileEngine.fire(level, boss, start.add(dir.scale(1.5)), dir.scale(0.9), 80, damage,
+                radius, 5);
     }
 }

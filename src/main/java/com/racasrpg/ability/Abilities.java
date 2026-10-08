@@ -91,8 +91,8 @@ public final class Abilities {
                                     fx(MobEffects.REGENERATION, 10, 0)))),
             // DRACONATO
             List.of(
-                    a("Sopro de Fogo", "Dispara 3 flechas em chamas.", 14,
-                            p -> AbilityEffects.volley(p, 3, 6.0, 6.0, 8)),
+                    a("Bola de Fogo Dracônica", "Lança uma bola de fogo que explode ao atingir e queima monstros em área.", 10,
+                            p -> AbilityEffects.fireball(p, 11.0F, 4.5, 8)),
                     a("Escamas Ancestrais", "Resistência e imunidade a fogo por 12s.", 35,
                             p -> AbilityEffects.buff(p, ParticleTypes.FLAME,
                                     fx(MobEffects.DAMAGE_RESISTANCE, 12, 2), fx(MobEffects.FIRE_RESISTANCE, 12, 0))),

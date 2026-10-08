@@ -25,6 +25,7 @@ public class FlameWyrm extends Blaze implements IRaceBoss {
     private final BossMusic music = new BossMusic("music_disc.5", 3500);
 
     private int ringCooldown = 140;
+    private int fireballCooldown = 80;
     private boolean enraged = false;
 
     public FlameWyrm(EntityType<? extends Blaze> type, Level level) {
@@ -88,6 +89,15 @@ public class FlameWyrm extends Blaze implements IRaceBoss {
             this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, MobEffectInstance.INFINITE_DURATION, 0));
             BossSkills.fireRing(this, 12.0, 8.0F, 6);
             BossSkills.announce(this, "O Dragão Flamejante arde em fúria!");
+        }
+
+        if (target != null && --this.fireballCooldown <= 0) {
+            if (this.distanceTo(target) < 32.0) {
+                this.fireballCooldown = this.enraged ? 50 : 90;
+                BossSkills.fireball(this, target, 9.0F, 3.5);
+            } else {
+                this.fireballCooldown = 20;
+            }
         }
 
         if (target != null && --this.ringCooldown <= 0) {

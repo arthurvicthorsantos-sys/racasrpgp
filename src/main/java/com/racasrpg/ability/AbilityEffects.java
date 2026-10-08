@@ -106,6 +106,8 @@ public final class AbilityEffects {
         level.playSound(null, p.blockPosition(), SoundEvents.DRAGON_FIREBALL_EXPLODE, SoundSource.PLAYERS, 0.8F, 1.1F);
         particles(p, ParticleTypes.EXPLOSION, 6, radius * 0.4);
         particles(p, ParticleTypes.CLOUD, 30, radius * 0.5);
+        Fx.ring(level, ParticleTypes.CLOUD, p.getX(), p.getY() + 0.2, p.getZ(), 40, radius * 0.1);
+        Fx.ring(level, ParticleTypes.CRIT, p.getX(), p.getY() + 0.2, p.getZ(), 32, radius * 0.14);
     }
 
     /** Rugido: enfraquece e atrasa monstros ao redor, com um pouco de dano. */
@@ -122,6 +124,8 @@ public final class AbilityEffects {
         }
         level.playSound(null, p.blockPosition(), SoundEvents.ENDER_DRAGON_GROWL, SoundSource.PLAYERS, 0.7F, 1.3F);
         particles(p, ParticleTypes.SMOKE, 40, radius * 0.4);
+        Fx.ring(level, ParticleTypes.POOF, p.getX(), p.getY() + 0.3, p.getZ(), 36, radius * 0.08);
+        Fx.ring(level, ParticleTypes.SMOKE, p.getX(), p.getY() + 0.3, p.getZ(), 28, radius * 0.05);
     }
 
     /** Fumaça: cega e atrasa monstros ao redor e acelera quem lançou. */
@@ -154,6 +158,7 @@ public final class AbilityEffects {
             arrow.setPos(p.getX(), p.getEyeY() - 0.1, p.getZ());
             arrow.shoot(dir.x, dir.y, dir.z, 2.8F, 1.0F);
             arrow.setBaseDamage(damage);
+            arrow.setCritArrow(true);
             arrow.pickup = AbstractArrow.Pickup.DISALLOWED;
             if (fireSeconds > 0) {
                 arrow.setRemainingFireTicks(fireSeconds * 20);
@@ -200,6 +205,7 @@ public final class AbilityEffects {
         }
         p.serverLevel().playSound(null, p.blockPosition(), SoundEvents.SPIDER_AMBIENT, SoundSource.PLAYERS, 1.0F, 0.6F);
         particles(p, ParticleTypes.ITEM_SLIME, 40, radius * 0.4);
+        Fx.ring(p.serverLevel(), ParticleTypes.ITEM_SLIME, p.getX(), p.getY() + 0.3, p.getZ(), 32, radius * 0.1);
     }
 
     /** Explosão de fogo: dano e fogo em monstros ao redor. */
@@ -211,6 +217,11 @@ public final class AbilityEffects {
         p.serverLevel().playSound(null, p.blockPosition(), SoundEvents.BLAZE_SHOOT, SoundSource.PLAYERS, 1.2F, 0.7F);
         particles(p, ParticleTypes.FLAME, 80, radius * 0.4);
         particles(p, ParticleTypes.LAVA, 15, radius * 0.3);
+        Fx.ring(p.serverLevel(), ParticleTypes.FLAME, p.getX(), p.getY() + 0.3, p.getZ(), 48, radius * 0.12);
+        Fx.ring(p.serverLevel(), ParticleTypes.SMOKE, p.getX(), p.getY() + 0.3, p.getZ(), 36, radius * 0.07);
+        for (LivingEntity e : enemiesAround(p, radius)) {
+            Fx.column(p.serverLevel(), ParticleTypes.FLAME, e.getX(), e.getY(), e.getZ(), 30, 2.0);
+        }
     }
 
     /** Drena vida de monstros ao redor e cura quem lançou. */
@@ -219,6 +230,12 @@ public final class AbilityEffects {
         for (LivingEntity e : enemiesAround(p, radius)) {
             e.hurt(p.damageSources().playerAttack(p), damage);
             healed += damage * 0.5F;
+            for (int i = 1; i <= 10; i++) {
+                double t = i / 10.0;
+                p.serverLevel().sendParticles(ParticleTypes.SOUL_FIRE_FLAME,
+                        e.getX() + (p.getX() - e.getX()) * t, e.getY() + 1.0 + (p.getY() - e.getY()) * t * 0.5,
+                        e.getZ() + (p.getZ() - e.getZ()) * t, 1, 0.05, 0.05, 0.05, 0.0);
+            }
         }
         p.heal(Math.min(healed, maxHeal));
         p.serverLevel().playSound(null, p.blockPosition(), SoundEvents.WITHER_SPAWN, SoundSource.PLAYERS, 0.5F, 1.8F);
@@ -231,7 +248,9 @@ public final class AbilityEffects {
             float total = e.getType().is(EntityTypeTags.UNDEAD) ? damage * 2.0F : damage;
             e.hurt(p.damageSources().playerAttack(p), total);
             e.addEffect(new MobEffectInstance(net.minecraft.world.effect.MobEffects.GLOWING, 100, 0));
+            Fx.column(p.serverLevel(), ParticleTypes.END_ROD, e.getX(), e.getY(), e.getZ(), 28, 2.5);
         }
+        Fx.ring(p.serverLevel(), ParticleTypes.END_ROD, p.getX(), p.getY() + 0.3, p.getZ(), 36, radius * 0.1);
         p.serverLevel().playSound(null, p.blockPosition(), SoundEvents.BEACON_ACTIVATE, SoundSource.PLAYERS, 1.0F, 1.6F);
         particles(p, ParticleTypes.END_ROD, 60, radius * 0.4);
     }
@@ -244,6 +263,7 @@ public final class AbilityEffects {
         }
         p.serverLevel().playSound(null, p.blockPosition(), SoundEvents.WITHER_SHOOT, SoundSource.PLAYERS, 0.8F, 1.2F);
         particles(p, ParticleTypes.SOUL, 60, radius * 0.4);
+        Fx.ring(p.serverLevel(), ParticleTypes.SOUL, p.getX(), p.getY() + 0.3, p.getZ(), 40, radius * 0.09);
     }
 
     /** Nova gélida: dano, lentidão forte e congelamento em monstros ao redor. */
@@ -326,5 +346,12 @@ public final class AbilityEffects {
             }
         }
         level.playSound(null, p.blockPosition(), SoundEvents.SPIDER_STEP, SoundSource.PLAYERS, 1.0F, 0.8F);
+    }
+
+    /** Bola de fogo de verdade: voa, deixa rastro e explode ao atingir, queimando monstros em área. */
+    public static void fireball(ServerPlayer p, float damage, double radius, int fireSeconds) {
+        Vec3 dir = p.getLookAngle();
+        Vec3 start = p.getEyePosition().add(dir.scale(1.2)).subtract(0.0, 0.25, 0.0);
+        ProjectileEngine.fire(p.serverLevel(), p, start, dir.scale(1.15), 70, damage, radius, fireSeconds);
     }
 }
