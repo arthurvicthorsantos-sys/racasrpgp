@@ -2,7 +2,7 @@ package com.racasrpg.entity;
 
 import java.util.List;
 
-import com.racasrpg.ability.Fx;
+import com.racasrpg.ability.Visuals;
 
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -42,7 +42,7 @@ public final class BossSkills {
 
     private static void ring(Mob boss, ParticleOptions type, int points, double speed) {
         if (boss.level() instanceof ServerLevel level) {
-            Fx.ring(level, type, boss.getX(), boss.getY() + 0.3, boss.getZ(), points, speed);
+            Visuals.ring(level, type, boss.getX(), boss.getY() + 0.3, boss.getZ(), points, speed);
         }
     }
 

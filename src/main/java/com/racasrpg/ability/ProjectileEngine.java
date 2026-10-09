@@ -158,8 +158,8 @@ public final class ProjectileEngine {
         level.sendParticles(ParticleTypes.FLAME, at.x, at.y, at.z, 160, r * 0.35, r * 0.25, r * 0.35, 0.12);
         level.sendParticles(ParticleTypes.LAVA, at.x, at.y, at.z, 40, r * 0.3, r * 0.2, r * 0.3, 0.0);
         level.sendParticles(ParticleTypes.LARGE_SMOKE, at.x, at.y, at.z, 40, r * 0.3, r * 0.25, r * 0.3, 0.05);
-        Fx.ring(level, ParticleTypes.FLAME, at.x, at.y + 0.3, at.z, 48, r * 0.11);
-        Fx.ring(level, ParticleTypes.SMOKE, at.x, at.y + 0.3, at.z, 36, r * 0.07);
+        Visuals.ring(level, ParticleTypes.FLAME, at.x, at.y + 0.3, at.z, 48, r * 0.11);
+        Visuals.ring(level, ParticleTypes.SMOKE, at.x, at.y + 0.3, at.z, 36, r * 0.07);
         level.playSound(null, BlockPos.containing(at), SoundEvents.DRAGON_FIREBALL_EXPLODE, SoundSource.PLAYERS, 1.6F, 0.9F);
 
         LivingEntity owner = null;
